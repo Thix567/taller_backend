@@ -1,0 +1,267 @@
+### ============================================================
+### API Taller Mecanico - coleccion manual (VS Code REST Client)
+### 1. Ejecute primero el login de abajo.
+### 2. Copie el valor de "token" y pegelo en @token.
+### ============================================================
+
+@baseUrl = http://localhost:8080
+@token = PEGAR_TOKEN_AQUI
+@informeId = 1
+@clienteId = 1
+@vehiculoId = 1
+@mecanicoId = 1
+@paqueteId = 1
+@insumoId = 1
+
+### Health (publico)
+GET {{baseUrl}}/api/health
+
+### Login (publico)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Usuario autenticado
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Configuracion
+GET {{baseUrl}}/api/configuracion
+Authorization: Bearer {{token}}
+
+### Actualizar configuracion
+PUT {{baseUrl}}/api/configuracion
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombreTaller": "Taller Mecanico Automotriz",
+  "ruc": "20123456789",
+  "direccion": "Av. Principal 123 - Lima",
+  "telefono": "(01) 555-1234",
+  "telefonoWhatsapp": "51987654321",
+  "correo": "contacto@taller.com",
+  "horarioAtencion": "Lunes a Sabado de 08:00 a 18:00",
+  "textoGarantia": "Garantia valida presentando este informe.",
+  "mensajeRecordatorio": "Hola {cliente}, su {vehiculo} ({placa}) requiere mantenimiento.",
+  "capacidadMaximaSimultanea": 3
+}
+
+### Paquetes
+GET {{baseUrl}}/api/paquetes
+Authorization: Bearer {{token}}
+
+### Insumos
+GET {{baseUrl}}/api/insumos
+Authorization: Bearer {{token}}
+
+### Insumos con stock bajo
+GET {{baseUrl}}/api/insumos/alertas-stock
+Authorization: Bearer {{token}}
+
+### Crear cliente
+POST {{baseUrl}}/api/clientes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dniRuc": "70123456",
+  "nombreCompleto": "Juan Perez",
+  "telefonoWhatsapp": "987654321",
+  "correo": "juan.perez@test.com",
+  "direccion": "Av. Los Olivos 456"
+}
+
+### Crear vehiculo
+POST {{baseUrl}}/api/vehiculos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "cliente": { "id": {{clienteId}} },
+  "placa": "ABC-123",
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "anio": 2020,
+  "tipoCombustible": "GASOLINA",
+  "vinMotor": "VIN123456789",
+  "color": "Blanco",
+  "kilometrajeActual": 48000
+}
+
+### Crear mecanico
+POST {{baseUrl}}/api/mecanicos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombreCompleto": "Carlos Quispe",
+  "dni": "80123456",
+  "especialidad": "Mecanica general",
+  "telefono": "912345678",
+  "activo": true
+}
+
+### Crear cita
+POST {{baseUrl}}/api/citas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "clienteId": {{clienteId}},
+  "vehiculoId": {{vehiculoId}},
+  "paqueteId": {{paqueteId}},
+  "fechaHoraInicio": "2026-11-02T09:00:00",
+  "observaciones": "Mantenimiento programado"
+}
+
+### Convertir cita en orden
+POST {{baseUrl}}/api/citas/1/convertir
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mecanicoId": {{mecanicoId}},
+  "kilometrajeIngreso": 48000,
+  "nivelCombustible": "MEDIO",
+  "inventarioRecepcion": "Llanta de repuesto, gata, triangulo",
+  "observacionesRecepcion": "Rayon leve en parachoques"
+}
+
+### Crear orden de trabajo directa
+POST {{baseUrl}}/api/informes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "vehiculoId": {{vehiculoId}},
+  "paqueteId": {{paqueteId}},
+  "mecanicoId": {{mecanicoId}},
+  "kilometrajeIngreso": 48000,
+  "nivelCombustible": "MEDIO",
+  "inventarioRecepcion": "Llanta de repuesto, gata, triangulo",
+  "observacionesRecepcion": "Rayon leve en parachoques"
+}
+
+### Detalle de orden
+GET {{baseUrl}}/api/informes/{{informeId}}
+Authorization: Bearer {{token}}
+
+### Checklist
+GET {{baseUrl}}/api/informes/{{informeId}}/checklist
+Authorization: Bearer {{token}}
+
+### Actualizar item del checklist
+PATCH {{baseUrl}}/api/informes/{{informeId}}/checklist/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estadoComponente": "OPTIMO",
+  "accionRealizada": "COMPLETADO",
+  "valorMedido": "OK",
+  "observacionTecnica": "Sin novedades"
+}
+
+### Registrar escaneos
+PATCH {{baseUrl}}/api/informes/{{informeId}}/escaneos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "escaneoInicialResultado": "Sin codigos DTC activos",
+  "escaneoFinalResultado": "Sin codigos DTC luego del servicio"
+}
+
+### Registrar consumo
+POST {{baseUrl}}/api/informes/{{informeId}}/consumos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "insumoId": {{insumoId}},
+  "cantidad": 2
+}
+
+### Agregar adicional
+POST {{baseUrl}}/api/informes/{{informeId}}/adicionales
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "descripcion": "Cambio de bujia de iridio",
+  "tipo": "REPUESTO",
+  "cantidad": 4,
+  "precioUnitario": 26,
+  "aprobadoPorCliente": true,
+  "cobraArandela": true
+}
+
+### Aprobar adicional
+PATCH {{baseUrl}}/api/adicionales/1/aprobacion?aprobado=true
+Authorization: Bearer {{token}}
+
+### Registrar pago (adelanto)
+POST {{baseUrl}}/api/informes/{{informeId}}/pagos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "monto": 200,
+  "tipoPago": "ADELANTO",
+  "medioPago": "YAPE_PLIN",
+  "referencia": "YP-0001"
+}
+
+### Subir evidencia (multipart)
+POST {{baseUrl}}/api/informes/{{informeId}}/evidencias
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----Limite
+
+------Limite
+Content-Disposition: form-data; name="archivo"; filename="foto.png"
+Content-Type: image/png
+
+< ./foto.png
+------Limite
+Content-Disposition: form-data; name="descripcion"
+
+Evidencia de reparacion
+------Limite
+Content-Disposition: form-data; name="etapa"
+
+REPARACION
+------Limite--
+
+### Cambiar estado
+PATCH {{baseUrl}}/api/informes/{{informeId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "EN_PROCESO"
+}
+
+### Reporte agregado
+GET {{baseUrl}}/api/informes/{{informeId}}/reporte
+Authorization: Bearer {{token}}
+
+### Dashboard
+GET {{baseUrl}}/api/reportes/dashboard
+Authorization: Bearer {{token}}
+
+### Historial por placa
+GET {{baseUrl}}/api/reportes/historial/ABC-123
+Authorization: Bearer {{token}}
+
+### Recordatorios
+GET {{baseUrl}}/api/reportes/recordatorios?dias=30
+Authorization: Bearer {{token}}
+
+### Productividad por mecanico
+GET {{baseUrl}}/api/reportes/mecanicos/productividad
+Authorization: Bearer {{token}}

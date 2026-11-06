@@ -1,0 +1,54 @@
+package com.taller.mecanica.controller;
+
+import com.taller.mecanica.model.entity.PaqueteServicio;
+import com.taller.mecanica.service.PaqueteService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/paquetes")
+@RequiredArgsConstructor
+public class PaqueteController {
+
+    private final PaqueteService paqueteService;
+
+    @GetMapping
+    public List<PaqueteServicio> listar(@RequestParam(required = false) Boolean soloActivos) {
+        return paqueteService.listar(soloActivos);
+    }
+
+    @GetMapping("/{id}")
+    public PaqueteServicio obtener(@PathVariable Long id) {
+        return paqueteService.obtener(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaqueteServicio crear(@Valid @RequestBody PaqueteServicio datos) {
+        return paqueteService.crear(datos);
+    }
+
+    @PutMapping("/{id}")
+    public PaqueteServicio actualizar(@PathVariable Long id, @Valid @RequestBody PaqueteServicio datos) {
+        return paqueteService.actualizar(id, datos);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        paqueteService.eliminar(id);
+    }
+}
