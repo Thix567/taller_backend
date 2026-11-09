@@ -1,29 +1,8 @@
 # Taller Mecanico - Backend
 
-API REST para la gestion de un taller mecanico automotriz, construida con **Spring Boot 3.4.3 + JWT**. Incluye un **modo demostracion portable** con base de datos H2 y el frontend Angular compilado dentro del mismo servicio.
+API REST para la gestion de un taller mecanico automotriz, construida con **Spring Boot 3.4.3 + JWT**. El frontend Angular compilado puede servirse desde el mismo servicio.
 
 > Repositorio independiente del frontend. El frontend Angular vive en el repositorio `taller-mecanico-frontend`.
-
-## Modo demo (recomendado para la presentacion)
-
-No requiere MySQL ni Node. Solo necesita Java, y la distribucion portable ya incluye su propio runtime.
-
-```bat
-demo.cmd
-```
-
-- Abre `http://localhost:8080`
-- Usuario: `admin` / `admin123`
-- Base de datos H2 **en memoria**: los datos de ejemplo se recrean en cada arranque.
-- Datos incluidos: 3 clientes, 3 vehiculos, 3 citas, 2 mecanicos, 1 orden en proceso, 11 insumos y el paquete de mantenimiento.
-
-Para generar una carpeta portable con Java incluido (copiable a un USB):
-
-```bat
-scripts\preparar-demo.ps1
-```
-
-La carpeta se crea en el escritorio como `Taller-Mecanico-Demo`. Contiene el jar, un runtime de Java y `demo.cmd`; no necesita nada instalado en la PC de destino.
 
 ## Modo desarrollo (MySQL)
 
@@ -58,7 +37,7 @@ Copie `.env.example` como `.env` y ajuste lo necesario:
 | `DB_PASSWORD` | `taller123` | Clave MySQL |
 | `DB_ROOT_PASSWORD` | vacio | Clave root (si aplica) |
 | `CORS_ORIGINS` | `http://localhost:4200` | Origen permitido para Angular en desarrollo |
-| `JWT_SECRET` | valor demo | Clave HS256 (cambiar en produccion) |
+| `JWT_SECRET` | valor por defecto | Clave HS256 (cambiar en produccion) |
 | `APP_ADMIN_USER` | `admin` | Usuario inicial |
 | `APP_ADMIN_PASSWORD` | `admin123` | Clave inicial |
 | `MAVEN_PATH` | vacio | Ruta a Maven si no esta en el PATH |
@@ -73,7 +52,6 @@ Copie `.env.example` como `.env` y ajuste lo necesario:
 | Spring Boot | 3.4.3 |
 | Maven | 3.9+ |
 | MySQL | 8.0 (desarrollo) |
-| H2 | modo demo en memoria |
 | Spring Security + OAuth2 Resource Server | JWT HS256 |
 | springdoc-openapi | 2.7.0 |
 | Lombok | 1.18.48 |
@@ -82,7 +60,7 @@ Copie `.env.example` como `.env` y ajuste lo necesario:
 
 ```
 com.taller.mecanica
-├── config        # seguridad, OpenAPI, CORS, datos iniciales y datos demo
+├── config        # seguridad, OpenAPI, CORS, datos iniciales
 ├── controller    # endpoints REST y servido del frontend compilado
 ├── dto           # request/response, mapper y ErrorResponse
 ├── exception     # excepciones de negocio y @RestControllerAdvice
@@ -96,7 +74,7 @@ com.taller.mecanica
 
 | Recurso | Valor |
 | --- | --- |
-| Aplicacion (demo) | `http://localhost:8080` |
+| Aplicacion | `http://localhost:8080` |
 | API | `http://localhost:8080/api` |
 | Swagger UI | `http://localhost:8080/swagger-ui.html` |
 | OpenAPI JSON | `http://localhost:8080/v3/api-docs` |
@@ -161,7 +139,7 @@ Rutas publicas: `/api/auth/login`, `/api/health`, `/v3/api-docs/**`, `/swagger-u
 
 ## Frontend compilado
 
-El backend incluye en `src/main/resources/static` el build de Angular para el modo demo. Si cambia el frontend, regenere esos archivos:
+El backend puede servir el build de Angular desde `src/main/resources/static`. Si cambia el frontend, regenere esos archivos:
 
 ```bat
 REM En el repositorio taller-mecanico-frontend
@@ -171,7 +149,7 @@ REM En este repositorio
 scripts\copiar-frontend.ps1
 ```
 
-Luego recompile el backend con `ejecutar.cmd -Build` o `scripts\preparar-demo.ps1`.
+Luego recompile el backend con `ejecutar.cmd -Build`.
 
 ## Pruebas manuales
 
@@ -193,8 +171,6 @@ En modo desarrollo (`DataInitializer`) se crea:
 - Paquete `MANTENIMIENTO MENOR GASOLINA` con 19 items.
 - 11 insumos iniciales.
 - Usuario `admin`.
-
-En modo demo (`DemoDataInitializer`, solo perfil `demo`) se agregan ademas clientes, vehiculos, mecanicos, citas y una orden de ejemplo.
 
 ## Notas academicas
 

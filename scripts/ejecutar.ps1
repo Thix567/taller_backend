@@ -105,7 +105,7 @@ if ($Build -or -not (Test-Path $jar)) {
 Write-Host ""
 Write-Host "Backend en http://localhost:$Port" -ForegroundColor Green
 Write-Host "Swagger en http://localhost:$Port/swagger-ui.html" -ForegroundColor Green
-Write-Host "Login demo: admin / admin123" -ForegroundColor DarkGray
+Write-Host "Credenciales: admin / admin123" -ForegroundColor DarkGray
 Write-Host "Ctrl+C para detener." -ForegroundColor DarkGray
 Write-Host ""
 

@@ -4,8 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * Sirve la aplicacion Angular compilada (src/main/resources/static).
- * Se usa en el perfil "demo" para no necesitar Node en la presentacion.
+ * Sirve la aplicacion Angular compilada desde src/main/resources/static.
  */
 @Controller
 public class SpaController {

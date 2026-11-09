@@ -6,7 +6,6 @@ target/
 # Datos locales
 .mysql-data/
 uploads/
-uploads-demo/
 .env
 application-local.properties
 
